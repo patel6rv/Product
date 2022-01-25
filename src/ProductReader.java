@@ -26,7 +26,7 @@ public class ProductReader
         JFileChooser chooser = new JFileChooser();
         File selectedFile;
         String rec= "";
-        int count = 0;
+        ArrayList <Product> productArrayList = new ArrayList<>();
 
         try
         {
@@ -41,23 +41,20 @@ public class ProductReader
                 InputStream in = new BufferedInputStream(Files.newInputStream(file, CREATE));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-                System.out.println(" ID#       Name           Description         Cost" + "\n =========================================================");
-
                 while(reader.ready())
                 {
-                    if(count != 0)
-                    {
-                        rec = reader.readLine();
-                        System.out.printf("\n\n %-60s ", rec);
-                    }
-                    else
-                    {
-                        rec = reader.readLine();
-                        System.out.printf(" %-60s ", rec);
-                    }
-                    count = 1;
+                    rec = reader.readLine();
+                    String[] lineInArray = rec.split(", ");
+                    Product item = new Product(lineInArray[0], lineInArray[1], lineInArray[2], Double.parseDouble(lineInArray[3]));
+                    productArrayList.add(item);
                 }
                 reader.close();
+                System.out.printf("%-30s%-30s%-30s%-30s\n", "ID#", "Name", "Description", "Cost");
+                System.out.println("=".repeat(100));
+                for(Product listedProduct : productArrayList)
+                {
+                    System.out.printf("%-30s%-30s%-30s%-30s\n\n", listedProduct.getID(), listedProduct.getName(), listedProduct.getDescription(), listedProduct.getCost());
+                }
                 System.out.println("\n\nData file read!");
             }
         }

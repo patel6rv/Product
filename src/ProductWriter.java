@@ -24,10 +24,10 @@ public class ProductWriter
     public static void main(String[] args)
     {
         Scanner in = new Scanner(System.in);
-        ArrayList <String> recs = new ArrayList<>();
+        ArrayList <Product> productArrayList = new ArrayList<>();
 
         //list values
-        String id = "";
+        String ID = "";
         String name = "";
         String description = "";
         double cost;
@@ -39,12 +39,12 @@ public class ProductWriter
 
         do
         {
-            id = SafeInput.getNonZeroLenString(in, "Please enter the product's ID");
             name = SafeInput.getNonZeroLenString(in, "Please enter the product's name");
             description = SafeInput.getNonZeroLenString(in, "Please enter a description of the product (short sentence)");
             cost = SafeInput.getDouble(in, "Please enter the product's price");
 
-            recs.add("" + id + ",   " + name + ",     " + description + ",   " + cost);
+            Product item = new Product(name, description, cost);
+            productArrayList.add(item);
 
             check = SafeInput.getYNConfirm(in, "Do you wish to add another product?");
         } while(check);
@@ -58,9 +58,9 @@ public class ProductWriter
             OutputStream out = new BufferedOutputStream(Files.newOutputStream(file, CREATE));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
 
-            for(String rec : recs)
+            for(Product rec : productArrayList)
             {
-                writer.write(rec, 0, rec.length());
+                writer.write(rec.toCSVRecord());
                 writer.newLine();
             }
             writer.close();
